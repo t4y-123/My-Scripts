@@ -16,11 +16,23 @@ if ((Check-SingleFileInDirByType $working_dir $txtExtentionList $srcTxtPrefixLis
 }
 
 #-o,自动进行覆盖
-if (!(Generate-CutPowerShellFile -WorkingDir $working_dir -VideoTypeList $video_types_list -TxtPrefix $srcTextPrefix -O))
-{
+try {
+    $getCmdResult = (Generate-CutPowerShellFile -WorkingDir $working_dir -VideoTypeList $video_types_list -TxtPrefix $srcTextPrefix -O)
+} catch {
+    Write-Error $_.Exception.Message
 	Write-Error "Generate-CutPowerShellFile fail."
 	return
+	
 }
+Write-Debug "getCmdResult : $getCmdResult"
+$getLastFlag = $getCmdResult[($getCmdResult.Count -1)]
+
+Write-Debug "getLastFlag : $getLastFlag"
+
+if( -not $getLastFlag){return}
+
+Write-Debug "getLastFlag not effect."
+
 
 #Invoke-FileByType  -LiteralPath $working_dir -IncludeExtensions $ps1Extention -IncludePrefix $cut_ps1_prefix_list
 
